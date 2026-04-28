@@ -57,6 +57,15 @@ export function useBeginner1Game() {
     setStatus("Escute novamente e escolha a nota-alvo.");
   };
 
+  const replayTarget = async () => {
+    if (!round) return;
+    setStatus("Reproduzindo nota-alvo...");
+    setIsPlaying(true);
+    await playTone(round.targetNote, 900);
+    setIsPlaying(false);
+    setStatus("Qual nota voce ouviu por ultimo?");
+  };
+
   const makeGuess = (note) => {
     if (!round || !canGuess) return { correct: false, target: null };
 
@@ -82,6 +91,7 @@ export function useBeginner1Game() {
     canGuess,
     startRound,
     replaySequence,
+    replayTarget,
     makeGuess,
   };
 }

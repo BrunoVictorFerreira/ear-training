@@ -13,6 +13,8 @@ export function RoundControls({
   onRootChange,
   onStartRound,
   onReplaySequence,
+  onReplayTarget,
+  hasRound,
   disabled,
 }) {
   return (
@@ -24,6 +26,9 @@ export function RoundControls({
         </ControlButton>
         <ControlButton onClick={onReplaySequence} disabled={disabled}>
           Ouvir sequencia
+        </ControlButton>
+        <ControlButton onClick={onReplayTarget} disabled={disabled || !hasRound}>
+          Ouvir nota-alvo
         </ControlButton>
       </ControlsRow>
 

@@ -17,6 +17,7 @@ export function Beginner1Module() {
     canGuess,
     startRound,
     replaySequence,
+    replayTarget,
     makeGuess,
   } = useBeginner1Game();
   const [highlights, setHighlights] = useState({});
@@ -49,6 +50,8 @@ export function Beginner1Module() {
         onRootChange={setRootNote}
         onStartRound={handleStartRound}
         onReplaySequence={replaySequence}
+        onReplayTarget={replayTarget}
+        hasRound={Boolean(round)}
         disabled={isPlaying}
       />
 
