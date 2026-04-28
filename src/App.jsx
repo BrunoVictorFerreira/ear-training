@@ -3,6 +3,7 @@ import { AppShell } from "./components/layout/AppShell";
 import styled, { css } from "styled-components";
 import { Beginner1Module } from "./modules/beginner1/Beginner1Module";
 import { Beginner2Module } from "./modules/beginner2/Beginner2Module";
+import { QuizzesModule } from "./modules/quizzes/QuizzesModule";
 import { useState } from "react";
 
 const ModuleTabs = styled.div`
@@ -42,9 +43,14 @@ function App() {
           <ModuleTab $active={activeModule === "beginner2"} onClick={() => setActiveModule("beginner2")}>
             Iniciante 2 (oitava)
           </ModuleTab>
+          <ModuleTab $active={activeModule === "quizzes"} onClick={() => setActiveModule("quizzes")}>
+            Quizzes
+          </ModuleTab>
         </ModuleTabs>
 
-        {activeModule === "beginner1" ? <Beginner1Module /> : <Beginner2Module />}
+        {activeModule === "beginner1" && <Beginner1Module />}
+        {activeModule === "beginner2" && <Beginner2Module />}
+        {activeModule === "quizzes" && <QuizzesModule />}
       </AppShell>
     </>
   );
