@@ -40,5 +40,35 @@ export const List = styled.ul`
 
 export const ListItem = styled.li`
   margin-bottom: 8px;
-  color: ${(props) => (props.$correct ? "#4ade80" : "#f87171")};
+  color: #e5e7eb;
+`;
+
+export const TimeStatus = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: ${(props) => {
+    if (props.$rating === "otimo") return "#166534";
+    if (props.$rating === "bom") return "#14532d";
+    if (props.$rating === "medio") return "#854d0e";
+    return "#7f1d1d";
+  }};
+  background: ${(props) => {
+    if (props.$rating === "otimo") return "#22c55e";
+    if (props.$rating === "bom") return "#86efac";
+    if (props.$rating === "medio") return "#facc15";
+    return "#ef4444";
+  }};
+  border-color: ${(props) => {
+    if (props.$rating === "otimo") return "#16a34a";
+    if (props.$rating === "bom") return "#4ade80";
+    if (props.$rating === "medio") return "#eab308";
+    return "#dc2626";
+  }};
 `;

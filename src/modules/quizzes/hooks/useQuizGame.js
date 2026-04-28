@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { quizzes } from "../quizzesData";
 
 function shuffleArray(items) {
@@ -10,6 +10,13 @@ function shuffleArray(items) {
   return copy;
 }
 
+function classifyTime(seconds) {
+  if (seconds <= 5) return "otimo";
+  if (seconds <= 10) return "bom";
+  if (seconds <= 15) return "medio";
+  return "ruim";
+}
+
 export function useQuizGame() {
   const [selectedQuizId, setSelectedQuizId] = useState(quizzes[0]?.id ?? "");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -18,6 +25,7 @@ export function useQuizGame() {
   const [attemptVersion, setAttemptVersion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answerState, setAnswerState] = useState(null);
+  const [questionStartAt, setQuestionStartAt] = useState(Date.now());
 
   const selectedQuiz = useMemo(
     () => quizzes.find((quiz) => quiz.id === selectedQuizId) ?? null,
@@ -32,6 +40,10 @@ export function useQuizGame() {
   }, [selectedQuiz, attemptVersion]);
   const totalQuestions = sessionQuestions.length;
   const currentQuestion = sessionQuestions[currentQuestionIndex] ?? null;
+
+  useEffect(() => {
+    setQuestionStartAt(Date.now());
+  }, [currentQuestionIndex, selectedQuizId, attemptVersion]);
 
   const score = useMemo(() => {
     if (!sessionQuestions.length) return 0;
@@ -52,10 +64,18 @@ export function useQuizGame() {
           selectedAnswer: answer.selectedAnswer,
           correctAnswer: question.correctAnswer,
           isCorrect: question.correctAnswer === answer.selectedAnswer,
+          responseTimeMs: answer.responseTimeMs,
+          responseTimeSec: Number((answer.responseTimeMs / 1000).toFixed(2)),
+          timeRating: classifyTime(answer.responseTimeMs / 1000),
         };
       })
       .filter(Boolean);
   }, [answers, sessionQuestions]);
+
+  const totalTimeMs = useMemo(
+    () => answers.reduce((acc, answer) => acc + (answer.responseTimeMs ?? 0), 0),
+    [answers]
+  );
 
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
@@ -63,6 +83,7 @@ export function useQuizGame() {
     setFinished(false);
     setSelectedAnswer(null);
     setAnswerState(null);
+    setQuestionStartAt(Date.now());
     setAttemptVersion((prev) => prev + 1);
   };
 
@@ -73,6 +94,7 @@ export function useQuizGame() {
     setFinished(false);
     setSelectedAnswer(null);
     setAnswerState(null);
+    setQuestionStartAt(Date.now());
     setAttemptVersion((prev) => prev + 1);
   };
 
@@ -82,12 +104,14 @@ export function useQuizGame() {
     const isCorrect = currentQuestion.correctAnswer === selectedAnswer;
     setSelectedAnswer(selectedAnswer);
     setAnswerState(isCorrect ? "correct" : "wrong");
+    const responseTimeMs = Math.max(0, Date.now() - questionStartAt);
 
     setAnswers((prev) => [
       ...prev,
       {
         questionId: currentQuestion.id,
         selectedAnswer,
+        responseTimeMs,
       },
     ]);
   };
@@ -114,6 +138,7 @@ export function useQuizGame() {
     totalQuestions,
     answers,
     answerSummary,
+    totalTimeMs,
     score,
     finished,
     selectedAnswer,

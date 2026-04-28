@@ -12,6 +12,7 @@ export function QuizzesModule() {
     currentQuestionIndex,
     totalQuestions,
     answerSummary,
+    totalTimeMs,
     score,
     finished,
     selectedAnswer,
@@ -43,7 +44,13 @@ export function QuizzesModule() {
           answerState={answerState}
         />
       ) : (
-        <QuizResult score={score} total={totalQuestions} answerSummary={answerSummary} onRestart={restartQuiz} />
+        <QuizResult
+          score={score}
+          total={totalQuestions}
+          answerSummary={answerSummary}
+          totalTimeMs={totalTimeMs}
+          onRestart={restartQuiz}
+        />
       )}
     </>
   );
