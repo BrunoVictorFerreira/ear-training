@@ -12,5 +12,5 @@ export const Title = styled.h1`
 
 export const Subtitle = styled.p`
   margin-top: 0;
-  color: #9ca3af;
+  color: var(--muted);
 `;

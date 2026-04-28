@@ -1,15 +1,15 @@
 import styled, { css } from "styled-components";
 
 export const QuizPanel = styled.section`
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
 `;
 
 export const Progress = styled.div`
-  color: #9ca3af;
+  color: var(--muted);
   margin-bottom: 10px;
 `;
 
@@ -24,12 +24,12 @@ export const Options = styled.div`
 `;
 
 export const OptionButton = styled.button`
-  border: 1px solid #374151;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #1f2937;
+  color: var(--text);
+  background: var(--surface-alt);
   cursor: pointer;
 
   ${(props) =>
@@ -42,31 +42,31 @@ export const OptionButton = styled.button`
   ${(props) =>
     props.$correct &&
     css`
-      border-color: #22c55e;
-      background: #14532d;
+      border-color: var(--success-border);
+      background: var(--success-bg);
     `}
 
   ${(props) =>
     props.$wrong &&
     css`
-      border-color: #ef4444;
-      background: #7f1d1d;
+      border-color: var(--error-border);
+      background: var(--error-bg);
     `}
 `;
 
 export const Feedback = styled.div`
   margin-top: 12px;
   font-weight: 700;
-  color: ${(props) => (props.$correct ? "#4ade80" : "#f87171")};
+  color: ${(props) => (props.$correct ? "#15803d" : "#b91c1c")};
 `;
 
 export const NextButton = styled.button`
   margin-top: 12px;
-  border: 1px solid #2563eb;
+  border: 1px solid var(--secondary);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #2563eb;
+  color: #ffffff;
+  background: var(--secondary);
   cursor: pointer;
 `;

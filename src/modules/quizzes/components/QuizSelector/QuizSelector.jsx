@@ -1,4 +1,5 @@
 import { Description, Label, Row, Select, SelectorPanel, Title } from "./QuizSelector.styles";
+import { NoteText } from "../../../../components/NoteText";
 
 export function QuizSelector({ quizzes, selectedQuizId, selectedQuiz, onChangeQuiz }) {
   return (
@@ -14,7 +15,9 @@ export function QuizSelector({ quizzes, selectedQuizId, selectedQuiz, onChangeQu
           ))}
         </Select>
       </Row>
-      <Description>{selectedQuiz?.description}</Description>
+      <Description>
+        <NoteText text={selectedQuiz?.description ?? ""} />
+      </Description>
     </SelectorPanel>
   );
 }

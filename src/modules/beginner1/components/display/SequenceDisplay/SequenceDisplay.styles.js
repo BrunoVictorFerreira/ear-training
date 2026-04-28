@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const SequenceBox = styled.section`
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;

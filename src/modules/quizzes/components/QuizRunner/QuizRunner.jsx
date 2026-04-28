@@ -1,4 +1,5 @@
 import { Feedback, NextButton, OptionButton, Options, Progress, Prompt, QuizPanel } from "./QuizRunner.styles";
+import { NoteText } from "../../../../components/NoteText";
 
 export function QuizRunner({ question, index, total, onAnswer, onNext, disabled, selectedAnswer, answerState }) {
   if (!question) return null;
@@ -9,7 +10,9 @@ export function QuizRunner({ question, index, total, onAnswer, onNext, disabled,
       <Progress>
         Pergunta {index + 1} de {total}
       </Progress>
-      <Prompt>{question.prompt}</Prompt>
+      <Prompt>
+        <NoteText text={question.prompt} />
+      </Prompt>
 
       <Options>
         {question.options.map((option) => (
@@ -21,7 +24,7 @@ export function QuizRunner({ question, index, total, onAnswer, onNext, disabled,
             $correct={hasAnswered && option === question.correctAnswer}
             $wrong={hasAnswered && option === selectedAnswer && selectedAnswer !== question.correctAnswer}
           >
-            {option}
+            <NoteText text={option} />
           </OptionButton>
         ))}
       </Options>
@@ -31,7 +34,11 @@ export function QuizRunner({ question, index, total, onAnswer, onNext, disabled,
           <Feedback $correct={answerState === "correct"}>
             {answerState === "correct"
               ? "Correto! Boa."
-              : `Errou! A resposta certa e ${question.correctAnswer}.`}
+              : (
+                  <>
+                    Errou! A resposta certa e <NoteText text={question.correctAnswer} />.
+                  </>
+                )}
           </Feedback>
           <NextButton onClick={onNext}>{index + 1 === total ? "Ver resultado" : "Proxima pergunta"}</NextButton>
         </>

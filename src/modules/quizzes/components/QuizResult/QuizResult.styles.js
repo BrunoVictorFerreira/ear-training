@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const ResultPanel = styled.section`
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
 `;
@@ -14,16 +14,16 @@ export const Title = styled.h2`
 
 export const Summary = styled.p`
   margin: 0 0 10px;
-  color: #e5e7eb;
+  color: var(--text);
 `;
 
 export const RestartButton = styled.button`
-  border: 1px solid #2563eb;
+  border: 1px solid var(--secondary);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #2563eb;
+  color: #ffffff;
+  background: var(--secondary);
   cursor: pointer;
 `;
 
@@ -35,12 +35,12 @@ export const SectionTitle = styled.h3`
 export const List = styled.ul`
   margin: 0;
   padding-left: 18px;
-  color: #e5e7eb;
+  color: var(--text);
 `;
 
 export const ListItem = styled.li`
   margin-bottom: 8px;
-  color: #e5e7eb;
+  color: var(--text);
 `;
 
 export const TimeStatus = styled.span`

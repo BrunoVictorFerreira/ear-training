@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 
 export const ControlPanel = styled.section`
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
@@ -22,32 +22,33 @@ export const ControlsRow = styled.div`
 `;
 
 export const Label = styled.label`
-  color: #cbd5e1;
+  color: var(--muted);
 `;
 
 export const RootSelect = styled.select`
-  border: 1px solid #374151;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #1f2937;
+  color: var(--text);
+  background: var(--surface-alt);
 `;
 
 export const ControlButton = styled.button`
-  border: 1px solid #374151;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #1f2937;
+  color: var(--text);
+  background: var(--surface);
   cursor: pointer;
 
   ${(props) =>
     props.$primary &&
     css`
-      background: #2563eb;
-      border-color: #2563eb;
+      background: var(--primary);
+      border-color: var(--primary-strong);
+      color: #ffffff;
     `}
 
   &:disabled {

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const SelectorPanel = styled.section`
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
@@ -15,7 +15,7 @@ export const Title = styled.h2`
 
 export const Description = styled.p`
   margin: 8px 0 0;
-  color: #cbd5e1;
+  color: var(--muted);
 `;
 
 export const Row = styled.div`
@@ -26,14 +26,14 @@ export const Row = styled.div`
 `;
 
 export const Label = styled.label`
-  color: #e5e7eb;
+  color: var(--text);
 `;
 
 export const Select = styled.select`
-  border: 1px solid #374151;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #1f2937;
+  color: var(--text);
+  background: var(--surface-alt);
 `;

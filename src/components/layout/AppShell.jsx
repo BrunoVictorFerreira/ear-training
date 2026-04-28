@@ -3,7 +3,7 @@ import { ShellContainer, Subtitle, Title } from "./AppShell.styles";
 export function AppShell({ children }) {
   return (
     <ShellContainer>
-      <Title>Treino de Ouvido</Title>
+      <Title>Musiclly</Title>
       {children}
     </ShellContainer>
   );

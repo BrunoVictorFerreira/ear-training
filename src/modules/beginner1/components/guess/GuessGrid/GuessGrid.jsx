@@ -1,4 +1,5 @@
 import { GuessButton, GuessPanel, Grid, SectionTitle } from "./GuessGrid.styles";
+import { NoteText } from "../../../../../components/NoteText";
 
 export function GuessGrid({ notes, canGuess, highlights, onGuess }) {
   return (
@@ -13,7 +14,7 @@ export function GuessGrid({ notes, canGuess, highlights, onGuess }) {
             $isCorrect={highlights[note] === "correct"}
             $isWrong={highlights[note] === "wrong"}
           >
-            {note}
+            <NoteText text={note} />
           </GuessButton>
         ))}
       </Grid>

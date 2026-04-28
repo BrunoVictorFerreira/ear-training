@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 
 export const GuessPanel = styled.section`
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
@@ -20,26 +20,26 @@ export const Grid = styled.div`
 `;
 
 export const GuessButton = styled.button`
-  border: 1px solid #374151;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
-  color: #f9fafb;
-  background: #1f2937;
+  color: var(--text);
+  background: var(--surface-alt);
   cursor: pointer;
 
   ${(props) =>
     props.$isCorrect &&
     css`
-      border-color: #22c55e;
-      background: #14532d;
+      border-color: var(--success-border);
+      background: var(--success-bg);
     `}
 
   ${(props) =>
     props.$isWrong &&
     css`
-      border-color: #ef4444;
-      background: #7f1d1d;
+      border-color: var(--error-border);
+      background: var(--error-bg);
     `}
 
   &:disabled {
