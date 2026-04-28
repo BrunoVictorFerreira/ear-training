@@ -38,4 +38,35 @@ export const OptionButton = styled.button`
       opacity: 0.65;
       cursor: not-allowed;
     `}
+
+  ${(props) =>
+    props.$correct &&
+    css`
+      border-color: #22c55e;
+      background: #14532d;
+    `}
+
+  ${(props) =>
+    props.$wrong &&
+    css`
+      border-color: #ef4444;
+      background: #7f1d1d;
+    `}
+`;
+
+export const Feedback = styled.div`
+  margin-top: 12px;
+  font-weight: 700;
+  color: ${(props) => (props.$correct ? "#4ade80" : "#f87171")};
+`;
+
+export const NextButton = styled.button`
+  margin-top: 12px;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  color: #f9fafb;
+  background: #2563eb;
+  cursor: pointer;
 `;

@@ -26,3 +26,19 @@ export const RestartButton = styled.button`
   background: #2563eb;
   cursor: pointer;
 `;
+
+export const SectionTitle = styled.h3`
+  margin: 14px 0 8px;
+  font-size: 16px;
+`;
+
+export const List = styled.ul`
+  margin: 0;
+  padding-left: 18px;
+  color: #e5e7eb;
+`;
+
+export const ListItem = styled.li`
+  margin-bottom: 8px;
+  color: ${(props) => (props.$correct ? "#4ade80" : "#f87171")};
+`;

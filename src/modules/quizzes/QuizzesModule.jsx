@@ -11,10 +11,14 @@ export function QuizzesModule() {
     currentQuestion,
     currentQuestionIndex,
     totalQuestions,
+    answerSummary,
     score,
     finished,
+    selectedAnswer,
+    answerState,
     changeQuiz,
     answerQuestion,
+    nextQuestion,
     restartQuiz,
   } = useQuizGame();
 
@@ -33,10 +37,13 @@ export function QuizzesModule() {
           index={currentQuestionIndex}
           total={totalQuestions}
           onAnswer={answerQuestion}
+          onNext={nextQuestion}
           disabled={!currentQuestion}
+          selectedAnswer={selectedAnswer}
+          answerState={answerState}
         />
       ) : (
-        <QuizResult score={score} total={totalQuestions} onRestart={restartQuiz} />
+        <QuizResult score={score} total={totalQuestions} answerSummary={answerSummary} onRestart={restartQuiz} />
       )}
     </>
   );

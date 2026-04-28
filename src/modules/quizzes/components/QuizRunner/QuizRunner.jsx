@@ -1,7 +1,8 @@
-import { OptionButton, Options, Progress, Prompt, QuizPanel } from "./QuizRunner.styles";
+import { Feedback, NextButton, OptionButton, Options, Progress, Prompt, QuizPanel } from "./QuizRunner.styles";
 
-export function QuizRunner({ question, index, total, onAnswer, disabled }) {
+export function QuizRunner({ question, index, total, onAnswer, onNext, disabled, selectedAnswer, answerState }) {
   if (!question) return null;
+  const hasAnswered = Boolean(answerState);
 
   return (
     <QuizPanel>
@@ -12,11 +13,29 @@ export function QuizRunner({ question, index, total, onAnswer, disabled }) {
 
       <Options>
         {question.options.map((option) => (
-          <OptionButton key={option} onClick={() => onAnswer(option)} disabled={disabled} $disabled={disabled}>
+          <OptionButton
+            key={option}
+            onClick={() => onAnswer(option)}
+            disabled={disabled || hasAnswered}
+            $disabled={disabled || hasAnswered}
+            $correct={hasAnswered && option === question.correctAnswer}
+            $wrong={hasAnswered && option === selectedAnswer && selectedAnswer !== question.correctAnswer}
+          >
             {option}
           </OptionButton>
         ))}
       </Options>
+
+      {hasAnswered && (
+        <>
+          <Feedback $correct={answerState === "correct"}>
+            {answerState === "correct"
+              ? "Correto! Boa."
+              : `Errou! A resposta certa e ${question.correctAnswer}.`}
+          </Feedback>
+          <NextButton onClick={onNext}>{index + 1 === total ? "Ver resultado" : "Proxima pergunta"}</NextButton>
+        </>
+      )}
     </QuizPanel>
   );
 }

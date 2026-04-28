@@ -16,6 +16,8 @@ export function useQuizGame() {
   const [answers, setAnswers] = useState([]);
   const [finished, setFinished] = useState(false);
   const [attemptVersion, setAttemptVersion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [answerState, setAnswerState] = useState(null);
 
   const selectedQuiz = useMemo(
     () => quizzes.find((quiz) => quiz.id === selectedQuizId) ?? null,
@@ -39,10 +41,28 @@ export function useQuizGame() {
     }, 0);
   }, [answers, sessionQuestions]);
 
+  const answerSummary = useMemo(() => {
+    return answers
+      .map((answer, index) => {
+        const question = sessionQuestions.find((item) => item.id === answer.questionId);
+        if (!question) return null;
+        return {
+          order: index + 1,
+          prompt: question.prompt,
+          selectedAnswer: answer.selectedAnswer,
+          correctAnswer: question.correctAnswer,
+          isCorrect: question.correctAnswer === answer.selectedAnswer,
+        };
+      })
+      .filter(Boolean);
+  }, [answers, sessionQuestions]);
+
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setAnswers([]);
     setFinished(false);
+    setSelectedAnswer(null);
+    setAnswerState(null);
     setAttemptVersion((prev) => prev + 1);
   };
 
@@ -51,11 +71,17 @@ export function useQuizGame() {
     setCurrentQuestionIndex(0);
     setAnswers([]);
     setFinished(false);
+    setSelectedAnswer(null);
+    setAnswerState(null);
     setAttemptVersion((prev) => prev + 1);
   };
 
   const answerQuestion = (selectedAnswer) => {
-    if (!currentQuestion || finished) return;
+    if (!currentQuestion || finished || answerState) return;
+
+    const isCorrect = currentQuestion.correctAnswer === selectedAnswer;
+    setSelectedAnswer(selectedAnswer);
+    setAnswerState(isCorrect ? "correct" : "wrong");
 
     setAnswers((prev) => [
       ...prev,
@@ -64,7 +90,10 @@ export function useQuizGame() {
         selectedAnswer,
       },
     ]);
+  };
 
+  const nextQuestion = () => {
+    if (!answerState) return;
     const isLast = currentQuestionIndex >= totalQuestions - 1;
     if (isLast) {
       setFinished(true);
@@ -72,6 +101,8 @@ export function useQuizGame() {
     }
 
     setCurrentQuestionIndex((prev) => prev + 1);
+    setSelectedAnswer(null);
+    setAnswerState(null);
   };
 
   return {
@@ -82,10 +113,14 @@ export function useQuizGame() {
     currentQuestionIndex,
     totalQuestions,
     answers,
+    answerSummary,
     score,
     finished,
+    selectedAnswer,
+    answerState,
     changeQuiz,
     answerQuestion,
+    nextQuestion,
     restartQuiz,
   };
 }

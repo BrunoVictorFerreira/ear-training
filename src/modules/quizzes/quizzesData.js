@@ -205,4 +205,83 @@ export const quizzes = [
       },
     ],
   },
+  {
+    id: "degrees-only",
+    title: "Somente Graus",
+    description: "Treino focado apenas em graus harmonicos (I a VII).",
+    questions: [
+      {
+        id: "g-1",
+        prompt: "Qual grau representa a tonica?",
+        options: ["I", "V", "IV", "vi"],
+        correctAnswer: "I",
+      },
+      {
+        id: "g-2",
+        prompt: "Qual grau e conhecido como dominante?",
+        options: ["V", "ii", "IV", "iii"],
+        correctAnswer: "V",
+      },
+      {
+        id: "g-3",
+        prompt: "Qual grau e conhecido como subdominante?",
+        options: ["IV", "I", "V", "vi"],
+        correctAnswer: "IV",
+      },
+      {
+        id: "g-4",
+        prompt: "Em uma tonalidade maior, qual e o relativo menor da tonica?",
+        options: ["vi", "iii", "ii", "vii"],
+        correctAnswer: "vi",
+      },
+      {
+        id: "g-5",
+        prompt: "Qual grau normalmente gera maior tensao antes de resolver na tonica?",
+        options: ["V", "I", "vi", "ii"],
+        correctAnswer: "V",
+      },
+      {
+        id: "g-6",
+        prompt: "Qual grau corresponde ao acorde diminuto diatonico em campo harmonico maior?",
+        options: ["vii", "ii", "iii", "vi"],
+        correctAnswer: "vii",
+      },
+      {
+        id: "g-7",
+        prompt: "Na progressao I-IV-V-I, qual e o terceiro acorde?",
+        options: ["V", "IV", "I", "ii"],
+        correctAnswer: "V",
+      },
+      {
+        id: "g-8",
+        prompt: "Qual grau geralmente aparece como preparacao para o V em progressao funcional?",
+        options: ["ii", "I", "vi", "iii"],
+        correctAnswer: "ii",
+      },
+      {
+        id: "g-9",
+        prompt: "Qual grau tem funcao tonica secundaria junto com o I?",
+        options: ["vi", "V", "IV", "vii"],
+        correctAnswer: "vi",
+      },
+      {
+        id: "g-10",
+        prompt: "Em numeros romanos, qual grau vem logo apos o iii?",
+        options: ["IV", "V", "ii", "vi"],
+        correctAnswer: "IV",
+      },
+      {
+        id: "g-11",
+        prompt: "Qual sequencia representa uma cadencia autentica basica?",
+        options: ["V - I", "IV - I", "ii - iii", "vi - IV"],
+        correctAnswer: "V - I",
+      },
+      {
+        id: "g-12",
+        prompt: "Qual grau corresponde ao supertonico?",
+        options: ["ii", "iii", "IV", "vii"],
+        correctAnswer: "ii",
+      },
+    ],
+  },
 ];
