@@ -47,6 +47,7 @@ export function RoundControls({
         <Label htmlFor="audio-mode">Timbre</Label>
         <RootSelect id="audio-mode" value={audioMode} onChange={(event) => onAudioModeChange(event.target.value)}>
           <option value="piano">Piano</option>
+          <option value="violao">Violao</option>
           <option value="normal">Normal</option>
         </RootSelect>
       </ControlsRow>

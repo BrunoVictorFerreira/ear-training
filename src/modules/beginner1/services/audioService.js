@@ -1,6 +1,8 @@
 import { NOTE_FREQUENCIES } from "../constants";
 
 let audioContext;
+const guitarSampleCache = new Map();
+const SAMPLE_BASE_OCTAVE = 4;
 
 function ensureAudioContext() {
   if (!audioContext) {
@@ -30,7 +32,7 @@ function playNormalTone(frequency, durationSec, now) {
   oscillator.stop(now + durationSec);
 }
 
-function createPianoPart(frequency, gainLevel, type) {
+function createHarmonicPart(frequency, gainLevel, type, filterFrequency = 4200, filterQ = 1) {
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
   const lowpass = audioContext.createBiquadFilter();
@@ -39,8 +41,8 @@ function createPianoPart(frequency, gainLevel, type) {
   oscillator.frequency.value = frequency;
 
   lowpass.type = "lowpass";
-  lowpass.frequency.value = 4200;
-  lowpass.Q.value = 1;
+  lowpass.frequency.value = filterFrequency;
+  lowpass.Q.value = filterQ;
 
   gainNode.gain.value = gainLevel;
 
@@ -49,6 +51,76 @@ function createPianoPart(frequency, gainLevel, type) {
   lowpass.connect(audioContext.destination);
 
   return { oscillator, gainNode };
+}
+
+function playLayeredTone(frequency, durationSec, now, profile) {
+  const parts = profile.parts.map((part) =>
+    createHarmonicPart(
+      frequency * part.multiplier,
+      part.gain,
+      part.waveType,
+      profile.filter.frequency,
+      profile.filter.q
+    )
+  );
+
+  parts.forEach(({ gainNode }) => {
+    gainNode.gain.cancelScheduledValues(now);
+    gainNode.gain.setValueAtTime(0.0001, now);
+    gainNode.gain.linearRampToValueAtTime(gainNode.gain.value, now + profile.envelope.attack);
+    gainNode.gain.exponentialRampToValueAtTime(
+      Math.max(0.0001, gainNode.gain.value * profile.envelope.sustain),
+      now + profile.envelope.attack + profile.envelope.decay
+    );
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + durationSec + profile.envelope.release);
+  });
+
+  parts.forEach(({ oscillator }) => oscillator.start(now));
+  parts.forEach(({ oscillator }) => oscillator.stop(now + durationSec + profile.envelope.release + 0.02));
+}
+
+async function loadGuitarSample(note, octaveShift = 0) {
+  const key = `${note}${SAMPLE_BASE_OCTAVE + octaveShift}`;
+  if (guitarSampleCache.has(key)) return guitarSampleCache.get(key);
+
+  try {
+    const response = await fetch(`/audio/guitar/${key}.mp3`);
+    if (!response.ok) return null;
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    guitarSampleCache.set(key, audioBuffer);
+    return audioBuffer;
+  } catch {
+    return null;
+  }
+}
+
+async function playGuitarSample(note, durationSec, now, octaveShift = 0) {
+  const sample = await loadGuitarSample(note, octaveShift);
+  if (!sample) return false;
+
+  const source = audioContext.createBufferSource();
+  source.buffer = sample;
+
+  const toneFilter = audioContext.createBiquadFilter();
+  toneFilter.type = "lowpass";
+  toneFilter.frequency.value = 4300;
+  toneFilter.Q.value = 0.9;
+
+  const gainNode = audioContext.createGain();
+  gainNode.gain.setValueAtTime(0.0001, now);
+  gainNode.gain.linearRampToValueAtTime(0.55, now + 0.01);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + durationSec + 0.08);
+
+  source.connect(toneFilter);
+  toneFilter.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  const stopAt = now + Math.min(sample.duration, durationSec + 0.12);
+  source.start(now);
+  source.stop(stopAt);
+  await wait(Math.max(1, (stopAt - now) * 1000));
+  return true;
 }
 
 export async function playTone(note, durationMs = 700, audioMode = "piano") {
@@ -65,25 +137,26 @@ export async function playTone(note, durationMs = 700, audioMode = "piano") {
     return;
   }
 
-  const attack = 0.01;
-  const decay = 0.16;
-  const sustain = 0.14;
-  const release = Math.max(0.12, durationSec * 0.45);
+  if (audioMode === "violao") {
+    const played = await playGuitarSample(note, durationSec, now);
+    if (!played) {
+      playNormalTone(frequency, durationSec, now);
+    }
+    return;
+  }
 
-  const parts = [
-    createPianoPart(frequency, 0.24, "triangle"),
-    createPianoPart(frequency * 2, 0.1, "sine"),
-    createPianoPart(frequency * 3, 0.05, "sine"),
-  ];
-
-  parts.forEach(({ gainNode }) => {
-    gainNode.gain.cancelScheduledValues(now);
-    gainNode.gain.setValueAtTime(0.0001, now);
-    gainNode.gain.linearRampToValueAtTime(gainNode.gain.value, now + attack);
-    gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, gainNode.gain.value * sustain), now + attack + decay);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + durationSec + release);
+  playLayeredTone(frequency, durationSec, now, {
+    parts: [
+      { multiplier: 1, gain: 0.24, waveType: "triangle" },
+      { multiplier: 2, gain: 0.1, waveType: "sine" },
+      { multiplier: 3, gain: 0.05, waveType: "sine" },
+    ],
+    filter: { frequency: 4200, q: 1 },
+    envelope: {
+      attack: 0.01,
+      decay: 0.16,
+      sustain: 0.14,
+      release: Math.max(0.12, durationSec * 0.45),
+    },
   });
-
-  parts.forEach(({ oscillator }) => oscillator.start(now));
-  parts.forEach(({ oscillator }) => oscillator.stop(now + durationSec + release + 0.02));
 }
