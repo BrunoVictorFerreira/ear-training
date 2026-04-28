@@ -1,0 +1,62 @@
+import { useState } from "react";
+import { RoundControls } from "./components/controls/RoundControls/RoundControls";
+import { SequenceDisplay } from "./components/display/SequenceDisplay/SequenceDisplay";
+import { GuessGrid } from "./components/guess/GuessGrid/GuessGrid";
+import { StatusPanel } from "./components/status/StatusPanel/StatusPanel";
+import { useBeginner2Game } from "./hooks/useBeginner2Game";
+
+export function Beginner2Module() {
+  const {
+    noteNames,
+    rootNote,
+    setRootNote,
+    round,
+    isPlaying,
+    status,
+    score,
+    canGuess,
+    startRound,
+    replaySequence,
+    makeGuess,
+  } = useBeginner2Game();
+  const [highlights, setHighlights] = useState({});
+
+  const handleStartRound = async () => {
+    setHighlights({});
+    await startRound();
+  };
+
+  const handleGuess = (note) => {
+    const result = makeGuess(note);
+    if (!result.target) return;
+
+    if (result.correct) {
+      setHighlights({ [note]: "correct" });
+      return;
+    }
+
+    setHighlights({
+      [note]: "wrong",
+      [result.target]: "correct",
+    });
+  };
+
+  return (
+    <>
+      <RoundControls
+        roots={noteNames}
+        rootNote={rootNote}
+        onRootChange={setRootNote}
+        onStartRound={handleStartRound}
+        onReplaySequence={replaySequence}
+        disabled={isPlaying}
+      />
+
+      <SequenceDisplay sequence={round?.sequence} />
+
+      <GuessGrid notes={round?.sequence || []} canGuess={canGuess} highlights={highlights} onGuess={handleGuess} />
+
+      <StatusPanel status={status} score={score} />
+    </>
+  );
+}
