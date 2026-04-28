@@ -2,8 +2,11 @@ import { QuizResult } from "./components/QuizResult/QuizResult";
 import { QuizRunner } from "./components/QuizRunner/QuizRunner";
 import { QuizSelector } from "./components/QuizSelector/QuizSelector";
 import { useQuizGame } from "./hooks/useQuizGame";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function QuizzesModule() {
+  const navigate = useNavigate();
+  const { quizId } = useParams();
   const {
     quizzes,
     selectedQuiz,
@@ -17,11 +20,14 @@ export function QuizzesModule() {
     finished,
     selectedAnswer,
     answerState,
-    changeQuiz,
     answerQuestion,
     nextQuestion,
     restartQuiz,
-  } = useQuizGame();
+  } = useQuizGame(quizId);
+
+  const handleChangeQuiz = (nextQuizId) => {
+    navigate(`/quiz/${nextQuizId}`);
+  };
 
   return (
     <>
@@ -29,7 +35,7 @@ export function QuizzesModule() {
         quizzes={quizzes}
         selectedQuizId={selectedQuizId}
         selectedQuiz={selectedQuiz}
-        onChangeQuiz={changeQuiz}
+        onChangeQuiz={handleChangeQuiz}
       />
 
       {!finished ? (

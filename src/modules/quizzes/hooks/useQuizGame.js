@@ -17,8 +17,13 @@ function classifyTime(seconds) {
   return "ruim";
 }
 
-export function useQuizGame() {
-  const [selectedQuizId, setSelectedQuizId] = useState(quizzes[0]?.id ?? "");
+function resolveQuizId(quizId) {
+  const exists = quizzes.some((quiz) => quiz.id === quizId);
+  return exists ? quizId : quizzes[0]?.id ?? "";
+}
+
+export function useQuizGame(initialQuizId) {
+  const [selectedQuizId, setSelectedQuizId] = useState(resolveQuizId(initialQuizId));
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [finished, setFinished] = useState(false);
@@ -26,6 +31,18 @@ export function useQuizGame() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answerState, setAnswerState] = useState(null);
   const [questionStartAt, setQuestionStartAt] = useState(Date.now());
+
+  useEffect(() => {
+    const nextQuizId = resolveQuizId(initialQuizId);
+    setSelectedQuizId(nextQuizId);
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setFinished(false);
+    setSelectedAnswer(null);
+    setAnswerState(null);
+    setQuestionStartAt(Date.now());
+    setAttemptVersion((prev) => prev + 1);
+  }, [initialQuizId]);
 
   const selectedQuiz = useMemo(
     () => quizzes.find((quiz) => quiz.id === selectedQuizId) ?? null,
