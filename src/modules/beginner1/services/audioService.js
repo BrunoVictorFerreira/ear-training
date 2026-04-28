@@ -12,6 +12,24 @@ export function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function playNormalTone(frequency, durationSec, now) {
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.type = "sine";
+  oscillator.frequency.value = frequency;
+
+  gainNode.gain.setValueAtTime(0.0001, now);
+  gainNode.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + durationSec);
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.start(now);
+  oscillator.stop(now + durationSec);
+}
+
 function createPianoPart(frequency, gainLevel, type) {
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
@@ -33,7 +51,7 @@ function createPianoPart(frequency, gainLevel, type) {
   return { oscillator, gainNode };
 }
 
-export async function playTone(note, durationMs = 700) {
+export async function playTone(note, durationMs = 700, audioMode = "piano") {
   ensureAudioContext();
 
   const frequency = NOTE_FREQUENCIES[note];
@@ -41,6 +59,12 @@ export async function playTone(note, durationMs = 700) {
 
   const now = audioContext.currentTime;
   const durationSec = durationMs / 1000;
+
+  if (audioMode === "normal") {
+    playNormalTone(frequency, durationSec, now);
+    return;
+  }
+
   const attack = 0.01;
   const decay = 0.16;
   const sustain = 0.14;

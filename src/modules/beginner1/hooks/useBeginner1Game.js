@@ -19,6 +19,7 @@ function createRound(root) {
 
 export function useBeginner1Game() {
   const [rootNote, setRootNote] = useState("C");
+  const [audioMode, setAudioMode] = useState("piano");
   const [round, setRound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [status, setStatus] = useState('Clique em "Nova rodada" para comecar.');
@@ -28,7 +29,7 @@ export function useBeginner1Game() {
 
   const playSequence = async (notes) => {
     for (const note of notes) {
-      await playTone(note, 600);
+      await playTone(note, 600, audioMode);
       await wait(200);
     }
   };
@@ -42,7 +43,7 @@ export function useBeginner1Game() {
     await playSequence(newRound.sequence);
     setStatus("Aguarde 1 segundo, tocando nota-alvo...");
     await wait(1000);
-    await playTone(newRound.targetNote, 900);
+    await playTone(newRound.targetNote, 900, audioMode);
 
     setIsPlaying(false);
     setStatus("Qual nota voce ouviu por ultimo?");
@@ -61,7 +62,7 @@ export function useBeginner1Game() {
     if (!round) return;
     setStatus("Reproduzindo nota-alvo...");
     setIsPlaying(true);
-    await playTone(round.targetNote, 900);
+    await playTone(round.targetNote, 900, audioMode);
     setIsPlaying(false);
     setStatus("Qual nota voce ouviu por ultimo?");
   };
@@ -84,6 +85,8 @@ export function useBeginner1Game() {
     noteNames: NOTE_NAMES,
     rootNote,
     setRootNote,
+    audioMode,
+    setAudioMode,
     round,
     isPlaying,
     status,

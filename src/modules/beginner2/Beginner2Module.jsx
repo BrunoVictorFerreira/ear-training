@@ -10,6 +10,8 @@ export function Beginner2Module() {
     noteNames,
     rootNote,
     setRootNote,
+    audioMode,
+    setAudioMode,
     round,
     isPlaying,
     status,
@@ -48,6 +50,8 @@ export function Beginner2Module() {
         roots={noteNames}
         rootNote={rootNote}
         onRootChange={setRootNote}
+        audioMode={audioMode}
+        onAudioModeChange={setAudioMode}
         onStartRound={handleStartRound}
         onReplaySequence={replaySequence}
         onReplayTarget={replayTarget}
