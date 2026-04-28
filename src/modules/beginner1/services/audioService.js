@@ -3,11 +3,29 @@ import { NOTE_FREQUENCIES } from "../constants";
 let audioContext;
 const guitarSampleCache = new Map();
 const SAMPLE_BASE_OCTAVE = 4;
+const AUDIO_BASE_URL = import.meta.env.BASE_URL;
 
 function ensureAudioContext() {
   if (!audioContext) {
-    audioContext = new AudioContext();
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    audioContext = new Ctx();
   }
+}
+
+async function unlockAudioContext() {
+  ensureAudioContext();
+
+  if (audioContext.state === "suspended") {
+    await audioContext.resume();
+  }
+
+  // iOS Safari often requires a real node start/stop after resume.
+  const source = audioContext.createBufferSource();
+  const buffer = audioContext.createBuffer(1, 1, 22050);
+  source.buffer = buffer;
+  source.connect(audioContext.destination);
+  source.start(0);
+  source.stop(0);
 }
 
 export function wait(ms) {
@@ -84,7 +102,7 @@ async function loadGuitarSample(note, octaveShift = 0) {
   if (guitarSampleCache.has(key)) return guitarSampleCache.get(key);
 
   try {
-    const response = await fetch(`/audio/guitar/${key}.mp3`);
+    const response = await fetch(`${AUDIO_BASE_URL}audio/guitar/${key}.mp3`);
     if (!response.ok) return null;
     const arrayBuffer = await response.arrayBuffer();
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
@@ -124,7 +142,7 @@ async function playGuitarSample(note, durationSec, now, octaveShift = 0) {
 }
 
 export async function playTone(note, durationMs = 700, audioMode = "piano") {
-  ensureAudioContext();
+  await unlockAudioContext();
 
   const frequency = NOTE_FREQUENCIES[note];
   if (!frequency) return;
