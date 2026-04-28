@@ -5,7 +5,8 @@
   "main": "src/main.jsx",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run copy-404",
+    "copy-404": "node --input-type=module -e \"import { copyFileSync } from 'node:fs'; copyFileSync('dist/index.html', 'dist/404.html');\"",
     "preview": "vite preview"
   },
   "keywords": [],
